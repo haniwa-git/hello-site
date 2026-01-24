@@ -1,4 +1,15 @@
+:root{
+  --content-max: 960px;   /* これが基準。迷ったら960 */
+  --content-pad: 16px;
+}
 
+.page{
+  width: min(100%, var(--content-max));
+  margin: 0 auto;
+  padding: 0 var(--content-pad);
+}
+
+/* 全体の基本設定 */
 body {
   background: #f5f6f8;
   font-family: system-ui, -apple-system, "Noto Sans JP", sans-serif;
@@ -81,7 +92,6 @@ section[data-kind="explain"] {
   display:inline-block;
   vertical-align:middle;
 }
-
 
 .fill-answer {
   display: none;
@@ -176,76 +186,89 @@ section {
   gap: 10px;
 }
 
-/* li */
-.q-item { margin: 0; }
+/* li リスト差し替え；全体タップしたらチェックボックスまでついてしまうため */
+.q-item { display: flex; align-items: center; margin-bottom: 10px; }
+.q-check-label { padding: 10px; cursor: pointer; } /* チェックボックスの押しやすさ */
+.q-card { flex: 1; cursor: pointer; /* その他デザイン */ }
 
-/* カード全体＝label */
-.q-card{
-  display: block;
-  padding: 12px 14px;
-  border: 1px solid #e6e6e6;
-  border-radius: 12px;
-  background: #fff;
+/* 答えの表示制御（is-openクラスで判定） */
+.q-card.is-open .q-blank { display: none; }
+.q-card.is-open .q-answer { display: inline; color: red; font-weight: bold; }
+/*1627上記差し替え*/
 
-  /* 少し浮かせる */
-  box-shadow: 0 6px 16px rgba(0,0,0,0.08);
-
-  /* タップしやすく */
+/* チェックボックス部分 */
+.q-check-wrap {
+  margin-right: 10px;
+}
+.q-remember-check {
+  width: 1.5em;
+  height: 1.5em;
   cursor: pointer;
-  line-height: 1.8;
-  -webkit-tap-highlight-color: transparent;
-
-  /* 文章の途中に空欄と答えを自然に混ぜる */
-  word-break: keep-all;
-}
-
-/* 押した感 */
-.q-card:active{
-  transform: translateY(1px);
-}
-.q-card:has(.q-toggle:checked){
-  background: #f3f3f3;
-}
-
-.q-card:has(.q-toggle:checked) .q-answer{
-  background: #ffffff;
-}
-/*色がぬるっと変わる*/
-.q-card{
-  transition: background 0.2s ease;
-}
-/*色がぬるっと変わる２*/
-.q-answer{
-  transition: background 0.2s ease;
 }
 
 
-/* チェックボックスは隠す（状態だけ使う） */
-.q-toggle{
-  position: absolute;
-  opacity: 0;
-  pointer-events: none;
+/* カード部分（答え表示用） */
+.q-card {
+  flex: 1;
+  padding: 14px;
+  background: #fff;
+  border: 1px solid #e0e0e0;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: 0.2s;
+  user-select: none; /* テキスト選択を防ぐ（誤操作防止） */
 }
 
-/* 空欄ボックス（中身なしでOK） */
-.q-blank{
+/* 先頭のチェックボックス */
+.q-toggle {
+  margin-top: 5px; /* 文章の一行目と高さを合わせる */
+  margin-right: 12px;
+  width: 1.2em;
+  height: 1.2em;
+  flex-shrink: 0;
+}
+
+/* 年号や文章のエリア */
+.q-year, .q-term, .q-parts {
+  margin-right: 0.5em;
+}
+
+/* --- 空欄と答えの制御 差し替え済み--- */
+
+.q-card-content {
+  flex: 1; /* 残りの幅をすべて使う */
+}
+
+/* --- 穴埋めの見た目 --- */
+.q-blank {
   display: inline-block;
-  width: 6.5em;           /* 空欄の長さ */
-  height: 1.35em;
-  vertical-align: middle; /* 行の上下ズレ対策 */
-  border: 2px solid #cfcfcf;
-  border-radius: 8px;
-  background: #fafafa;
-  margin: 0 0.25em;
+  width: 5em;
+  height: 1.4em;
+  background: #f0f0f0;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  vertical-align: middle;
+  margin: 0 4px;
 }
 
-/* 答えは最初は隠す */
-.q-answer{
+.q-answer { display: none; }
+
+
+/* カード内のチェックボックスがONなら、その行のすべての空欄を答えにする */
+.q-card:has(.q-toggle:checked) .q-blank {
   display: none;
-  padding: 0.1em 0.4em;
-  border-radius: 6px;
 }
 
+.q-card:has(.q-toggle:checked) .q-answer {
+  display: inline;
+  color: #dc2626; /* 赤色 */
+  font-weight: bold;
+}
+
+/* チェックされた行の背景を少し変える（任意） */
+.q-card:has(.q-toggle:checked) {
+  background: #fef2f2;
+}
 
 /* チェックONで「空欄を消して答えを出す」 */
 .q-toggle:checked ~ .q-blank{ display: none; }

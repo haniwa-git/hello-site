@@ -1,3 +1,4 @@
+// --- 基礎関数 ---
 function el(tag, attrs = {}, children = []) {
   const node = document.createElement(tag);
   for (const [k, v] of Object.entries(attrs)) {
@@ -9,9 +10,7 @@ function el(tag, attrs = {}, children = []) {
   return node;
 }
 
-function textNode(t) {
-  return document.createTextNode(t ?? "");
-}
+function textNode(t) { return document.createTextNode(t ?? ""); }
 
 function renderRuby(rubyObj) {
   const r = document.createElement("ruby");
@@ -28,7 +27,7 @@ function renderInlineParts(parent, parts, tokenToClass) {
     if (p.t) { parent.appendChild(textNode(p.t)); continue; }
     if (p.ruby) { parent.appendChild(renderRuby(p.ruby)); continue; }
     if (p.token) {
-      const span = el("span", { "data-token": p.token }, []);
+      const span = el("span", {}, []);
       const cls = tokenToClass.get(p.token);
       if (cls) span.classList.add(cls);
       if (p.ruby) span.appendChild(renderRuby(p.ruby));
@@ -47,61 +46,42 @@ function renderInlineParts(parent, parts, tokenToClass) {
   }
 }
 
-function buildTokenToClass(styles) {
-  const map = new Map();
-  for (const [cls, tokens] of Object.entries(styles ?? {})) {
-    for (const tk of tokens ?? []) map.set(tk, cls);
-  }
-  return map;
+// チェックがない時のメッセージを表示
+function showEmptyMessage() {
+  const app = document.getElementById("app");
+  app.innerHTML = `
+    <div style="padding:40px 20px; text-align:center;">
+      <p style="font-size:1.1rem; color:#666;">現在、チェックをつけている問題はありません。</p>
+      <p><a href="index.html" style="color:#007bff;">一覧ページに戻ってチェックを入れる</a></p>
+    </div>`;
 }
 
-function renderNav(app, nav) {
-  const box = el("div", { class: "jump-nav box2" }, [textNode("▶ ")]);
-  const frag = document.createDocumentFragment();
-  for (let i = 0; i < nav.length; i++) {
-    const n = nav[i];
-    frag.appendChild(el("a", { href: n.href }, [textNode(n.label)]));
-    if (i !== nav.length - 1) frag.appendChild(el("br", {}, []));
+// 全消去
+window.clearAllChecked = function() {
+  if (confirm("チェックをすべて消去しますか？")) {
+    localStorage.removeItem("checked-questions");
+    showEmptyMessage();
   }
-  box.appendChild(frag);
-  app.appendChild(box);
-}
+};
 
 function renderSection(app, section, tokenToClass) {
   const sec = el("section", { id: section.id }, [el("h2", {}, [textNode(section.h2)])]);
-
   for (const g of section.groups ?? []) {
-    if (g.h3) sec.appendChild(el("h3", {}, [textNode(g.h3)]));
     const ul = el("ul", { class: "q-list" }, []);
-    
     for (const item of g.items ?? []) {
       const li = el("li", { class: "q-item" }, []);
-
-      // 1. 復習チェックボックス（labelで囲んでここだけ反応させる）
-      const checkedIds = JSON.parse(localStorage.getItem("checked-questions") || "[]");
-      const checkbox = el("input", { 
-        type: "checkbox", 
-        class: "q-remember-check",
-        checked: checkedIds.includes(item.id) 
-      }, []);
+      const checkbox = el("input", { type: "checkbox", class: "q-remember-check", checked: true }, []);
       
-      // チェック時の保存イベント
       checkbox.addEventListener("change", (e) => {
         let ids = JSON.parse(localStorage.getItem("checked-questions") || "[]");
-        if (e.target.checked) {
-          if (!ids.includes(item.id)) ids.push(item.id);
-        } else {
-          ids = ids.filter(id => id !== item.id);
-        }
+        ids = ids.filter(id => id !== item.id);
         localStorage.setItem("checked-questions", JSON.stringify(ids));
+        li.style.opacity = e.target.checked ? "1" : "0.3";
+        if (ids.length === 0) showEmptyMessage();
       });
 
-      const checkLabel = el("label", { class: "q-check-label" }, [checkbox]);
-
-      // 2. カード（答えを見る用：divにする）
       const card = el("div", { class: "q-card" }, []);
       card.addEventListener("click", () => card.classList.toggle("is-open"));
-
       const content = el("div", { class: "q-card-content" }, []);
       if (item.year) content.appendChild(el("strong", { class: "q-year" }, [textNode(item.year + "：")]));
       if (item.term) {
@@ -110,9 +90,8 @@ function renderSection(app, section, tokenToClass) {
         content.appendChild(span);
       }
       if (item.parts) renderInlineParts(content, item.parts, tokenToClass);
-
       card.appendChild(content);
-      li.appendChild(checkLabel);
+      li.appendChild(el("label", { class: "q-check-label" }, [checkbox]));
       li.appendChild(card);
       ul.appendChild(li);
     }
@@ -124,15 +103,48 @@ function renderSection(app, section, tokenToClass) {
 async function main() {
   const app = document.getElementById("app");
   if (!app) return;
+
   try {
-    const res = await fetch("./bakumatsu.json", { cache: "no-store" });
+    const res = await fetch("./bakumatsu.json");
     const data = await res.json();
-    const tokenToClass = buildTokenToClass(data.styles);
-    app.textContent = "";
-    renderNav(app, data.page?.nav ?? []);
-    for (const section of data.sections ?? []) renderSection(app, section, tokenToClass);
+    const tokenToClass = new Map();
+    for (const [cls, tokens] of Object.entries(data.styles ?? {})) {
+      tokens.forEach(tk => tokenToClass.set(tk, cls));
+    }
+
+    const checkedIds = JSON.parse(localStorage.getItem("checked-questions") || "[]");
+    
+    // 画面構築
+    app.innerHTML = "";
+    
+    // 上部ボタン
+    const nav = el("div", { class: "review-nav", style: "display:flex; gap:10px; padding:10px; border-bottom:1px solid #ddd; margin-bottom:15px;" }, [
+      el("button", { onclick: "location.href='index.html'" }, [textNode("一覧に戻る")]),
+      el("button", { onclick: "clearAllChecked()", style: "color:red; margin-left:auto;" }, [textNode("全消去")])
+    ]);
+    app.appendChild(nav);
+
+    if (checkedIds.length === 0) {
+      showEmptyMessage();
+      return;
+    }
+
+    // コンテンツ描画
+    const contentArea = el("div", { id: "review-content" }, []);
+    app.appendChild(contentArea);
+
+    for (const section of data.sections) {
+      const filteredGroups = section.groups.map(g => ({
+        ...g,
+        items: g.items.filter(item => checkedIds.includes(item.id))
+      })).filter(g => g.items.length > 0);
+
+      if (filteredGroups.length > 0) {
+        renderSection(contentArea, { ...section, groups: filteredGroups }, tokenToClass);
+      }
+    }
   } catch (e) {
-    app.textContent = "エラー: " + e.message;
+    app.textContent = "読み込みエラー: " + e.message;
   }
 }
 

@@ -23,6 +23,7 @@
           "ulClass": "marusu",
           "items": [
             {
+              "id": "bakumatsu01",
               "liClass": "marusuli",
               "year": "1853年",
               "term": [
@@ -52,6 +53,7 @@
             },
 
             {
+              "id": "bakumatsu02", 
               "liClass": "marusuli",
               "year": "1854年",
               "term": [
