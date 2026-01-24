@@ -1,0 +1,257 @@
+
+body {
+  background: #f5f6f8;
+  font-family: system-ui, -apple-system, "Noto Sans JP", sans-serif;
+  line-height: 1.9;
+}
+
+/* 全体のコンテナ */
+#app {
+  max-width: 920px;
+  margin: 0 auto;
+  padding: 20px 14px 60px;
+}
+
+/* 共通sectionデザイン */
+section {
+  border-radius: 16px;
+  padding: 18px 16px;
+  margin: 20px 0;
+  border: 1px solid #e5e7eb;
+}
+
+/* 穴埋めページ（白） */
+section[data-kind="fill"] {
+  background: #ffffff;
+}
+
+/* 解説ページ（薄ベージュ） */
+section[data-kind="explain"] {
+  background: #fffaf2;
+}
+
+/* リスト */
+.marusu {
+  list-style: none;
+  padding-left: 0;
+}
+
+.marusuli {
+  padding: 12px 8px;
+  border-top: 1px solid #e5e7eb;
+}
+
+.marusuli:first-child {
+  border-top: none;
+}
+
+/* 年号幅を揃えて視認性アップ */
+.marusuli strong {
+  display: inline-block;
+  min-width: 6.5em;
+  font-weight: 800;
+}
+
+/* 強調色（シンプル寄り） */
+.red-bold {
+  color: #dc2626;
+  font-weight: 800;
+}
+
+.blue-bold {
+  color: #2563eb;
+  font-weight: 800;
+}
+
+.black-bold {
+  font-weight: 800;
+}
+
+/*
+.fill-label{
+  display:inline-flex;
+  align-items:center; 
+  gap:0.4em;
+  cursor:pointer;
+  user-select:none;
+}
+
+
+.fill-placeholder{
+  display:inline-block;
+  vertical-align:middle;
+}
+
+
+.fill-answer {
+  display: none;
+}
+
+.fill-answer::before{  <span class="fill-placeholder"></span>}
+
+.fill-label.show-answer .fill-answer {
+  display: inline;
+}
+
+.fill-label.show-answer .fill-placeholder {
+  display: none;
+}
+*/
+.fill-label{
+  display:inline-flex;
+  align-items:center;
+  gap:.5em;
+  vertical-align:middle;
+}
+
+/* 空欄ボックス */
+.fill-label::before{
+  content:"";
+  display:inline-block;
+  width:5.5em;
+  height:1.6em;
+  border:2px solid #222;
+  border-radius:.3em;
+}
+
+/* チェックボックスは任意で表示/非表示 */
+.fill-toggle{
+  /* 表示したいならそのまま */
+  /* 消したいなら下を有効化 */
+  /* position:absolute; left:-9999px; */
+}
+
+/* 答えの表示制御（例：チェック時だけ表示） */
+.fill-answer{
+  display:none;
+}
+.fill-label:has(.fill-toggle:checked) .fill-answer{
+  display:inline;
+}
+
+/* セクションの影 */
+section {
+  box-shadow: 0 4px 12px #00000008;
+}
+
+.blank{
+  display:inline-flex;
+  align-items:center;     /* 上下中央 */
+  gap:.35em;
+  vertical-align:middle;
+}
+
+.blank-box{
+  width:5.5em;            /* 空欄の長さ（調整） */
+  height:1.6em;
+  border:2px solid #222;
+  border-radius:.35em;
+  background:#fff;
+  cursor:pointer;
+  padding:0;
+}
+
+.blank-answer{
+  display:none;           /* 最初は隠す */
+  font-weight:700;
+  white-space:nowrap;
+}
+
+.blank.show .blank-answer{
+  display:inline;
+}
+
+.blank-check input{
+  width:1.1em;
+  height:1.1em;
+}
+
+/**** 全体をカード化 ****/
+/* リスト */
+.q-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 10px;
+}
+
+/* li */
+.q-item { margin: 0; }
+
+/* カード全体＝label */
+.q-card{
+  display: block;
+  padding: 12px 14px;
+  border: 1px solid #e6e6e6;
+  border-radius: 12px;
+  background: #fff;
+
+  /* 少し浮かせる */
+  box-shadow: 0 6px 16px rgba(0,0,0,0.08);
+
+  /* タップしやすく */
+  cursor: pointer;
+  line-height: 1.8;
+  -webkit-tap-highlight-color: transparent;
+
+  /* 文章の途中に空欄と答えを自然に混ぜる */
+  word-break: keep-all;
+}
+
+/* 押した感 */
+.q-card:active{
+  transform: translateY(1px);
+}
+.q-card:has(.q-toggle:checked){
+  background: #f3f3f3;
+}
+
+.q-card:has(.q-toggle:checked) .q-answer{
+  background: #ffffff;
+}
+/*色がぬるっと変わる*/
+.q-card{
+  transition: background 0.2s ease;
+}
+/*色がぬるっと変わる２*/
+.q-answer{
+  transition: background 0.2s ease;
+}
+
+
+/* チェックボックスは隠す（状態だけ使う） */
+.q-toggle{
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* 空欄ボックス（中身なしでOK） */
+.q-blank{
+  display: inline-block;
+  width: 6.5em;           /* 空欄の長さ */
+  height: 1.35em;
+  vertical-align: middle; /* 行の上下ズレ対策 */
+  border: 2px solid #cfcfcf;
+  border-radius: 8px;
+  background: #fafafa;
+  margin: 0 0.25em;
+}
+
+/* 答えは最初は隠す */
+.q-answer{
+  display: none;
+  padding: 0.1em 0.4em;
+  border-radius: 6px;
+}
+
+
+/* チェックONで「空欄を消して答えを出す」 */
+.q-toggle:checked ~ .q-blank{ display: none; }
+.q-toggle:checked ~ .q-answer{ display: inline; }
+
+/* 参考：色（必要なら） */
+.red-bold{ font-weight: 700; }
+.blue-bold{ font-weight: 700; }
+.black-bold{ font-weight: 700; }

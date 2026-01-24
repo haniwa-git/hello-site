@@ -1,0 +1,156 @@
+{
+  "page": {
+    "title": "幕末",
+    "nav": [
+      { "href": "#explain", "label": "【解説】" },
+      { "href": "#fill", "label": "【穴埋め】" }
+    ]
+  },
+
+  "styles": {
+    "red-bold": ["bk-blank-perry", "bk-blank-shimoda", "bk-blank-hakodate", "bk-blank-fubyodo"],
+    "blue-bold": ["bk-term-kurofune", "bk-term-washin", "bk-term-shukotsusho", "bk-word-sakoku"],
+    "black-bold": []
+  },
+
+  "sections": [
+    {
+      "id": "fill",
+      "h2": "【穴埋め】幕末",
+      "groups": [
+        {
+          "h3": "開国と江戸幕府の終焉",
+          "ulClass": "marusu",
+          "items": [
+            {
+              "liClass": "marusuli",
+              "year": "1853年",
+              "term": [
+                { "token": "bk-term-kurofune", "t": "黒船来航" }
+              ],
+              "parts": [
+                { "t": " … " },
+
+                {
+                  "blank": {
+                    "id": "bk-blank-perry",
+                    "answer": [{ "t": "ペリー" }],
+                    "answerWrapClass": "red-bold"
+                  }
+                },
+
+                { "t": "提督が神奈川県" },
+                { "ruby": { "base": "横須賀市浦賀", "rt": "よこすかしうらが" } },
+                { "t": "に来航し、開国を要求。" },
+                { "token": "bk-word-sakoku", "t": "鎖国" },
+                { "t": "が終わるきっかけに。「" },
+                { "ruby": { "base": "泰平", "rt": "たいへい" } },
+                { "t": "の眠りを覚ます" },
+                { "ruby": { "base": "上喜撰", "rt": "じょうきせん" } },
+                { "t": "たつた四杯で夜も眠れず」との歌が詠まれた。（蒸気船が4台来たこととお茶の品種「上喜撰」をかけている）" }
+              ]
+            },
+
+            {
+              "liClass": "marusuli",
+              "year": "1854年",
+              "term": [
+                { "token": "bk-term-washin", "ruby": { "base": "日米和親条約", "rt": "にちべいわしんじょうやく" } }
+              ],
+              "parts": [
+                { "t": " … 日本とアメリカが和親条約を結び、" },
+
+                {
+                  "blank": {
+                    "id": "bk-blank-shimoda",
+                    "answer": [{ "ruby": { "base": "下田", "rt": "しもだ" } }],
+                    "answerWrapClass": "red-bold"
+                  }
+                },
+
+                { "t": "と" },
+
+                {
+                  "blank": {
+                    "id": "bk-blank-hakodate",
+                    "answer": [{ "ruby": { "base": "函館", "rt": "はこだて" } }],
+                    "answerWrapClass": "red-bold"
+                  }
+                },
+
+                { "t": "を開港。" }
+              ]
+            },
+
+            {
+              "liClass": "marusuli",
+              "year": "1858年",
+              "term": [
+                { "token": "bk-term-shukotsusho", "ruby": { "base": "日米修好通商条約", "rt": "にちべいしゅうこうつうしょうじょうやく" } }
+              ],
+              "parts": [
+                { "t": " … アメリカと" },
+
+                {
+                  "blank": {
+                    "id": "bk-blank-fubyodo",
+                    "answer": [{ "t": "不平等条約" }],
+                    "answerWrapClass": "red-bold"
+                  }
+                },
+
+                { "t": "を結ぶ。大老（江戸幕府の臨時の最高権力）の" },
+                { "token": "bk-name-ii", "ruby": { "base": "井伊直弼", "rt": "いいなおすけ" } },
+                { "t": "が天皇の了承なしに独断で締結。" }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+
+    {
+      "id": "explain",
+      "h2": "【解説】幕末",
+      "groups": [
+        {
+          "h3": "開国と江戸幕府の終焉",
+          "ulClass": "marusu",
+          "items": [
+            {
+              "liClass": "marusuli",
+              "year": "1853年",
+              "term": [
+                { "token": "bk-term-kurofune", "t": "黒船来航" }
+              ],
+              "parts": [
+                { "t": " … " },
+                { "token": "bk-blank-perry", "t": "ペリー" },
+                { "t": "提督が神奈川県" },
+                { "ruby": { "base": "横須賀市浦賀", "rt": "よこすかしうらが" } },
+                { "t": "に来航し、開国を要求。" },
+                { "token": "bk-word-sakoku", "t": "鎖国" },
+                { "t": "が終わるきっかけに。" }
+              ]
+            },
+
+            {
+              "liClass": "marusuli",
+              "year": "1854年",
+              "term": [
+                { "token": "bk-term-washin", "ruby": { "base": "日米和親条約", "rt": "にちべいわしんじょうやく" } }
+              ],
+              "parts": [
+                { "t": " … 日本とアメリカが和親条約を結び、" },
+                { "token": "bk-blank-shimoda", "ruby": { "base": "下田", "rt": "しもだ" } },
+                { "t": "と" },
+                { "token": "bk-blank-hakodate", "ruby": { "base": "函館", "rt": "はこだて" } },
+                { "t": "を開港。" }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
